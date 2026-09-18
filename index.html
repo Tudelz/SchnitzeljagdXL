@@ -376,11 +376,11 @@ const STATIONS = [
 },
 {
   id:"talstation", name:"Talstation", sub:"Am Amtsweg · Braunlage",
-  lat:51.73190, lon:10.61290, gate:true, radius:400, profile:"car-fast",
+  lat:51.73190, lon:10.61290, gate:true, radius:400, profile:"trekking",
   steps:[
     {
       type:"number",
-      intro:`<p>Nochmal die Karte. Sechs Orte darauf tragen eure Namen.</p>
+      intro:`<p>Nochmal die Pilskarte. Sechs Orte darauf tragen eure Namen.</p>
              <p>Verbindet die Punkte in folgender Reihenfolge:</p>
              <p><em>Gregor — Paul — Phillip — Michi — Jack — Thorben</em></p>`,
       q:"Welche Zahl entsteht?",
@@ -392,27 +392,32 @@ const STATIONS = [
     {
       type:"info",
       title:"Stimmt.",
-      html:`<p>Weiter nach Altenau.</p>
+      html:`<p>Kurze Pause — wir können noch mal zur Unterkunft, danach geht's weiter zur Sportsbar.</p>
             <div class="callout">
-              <strong>Altenauer Brauerei</strong><br>
-              Breite Straße 29 · 38707 Altenau<br>
-              <em>20 km · gut 20 Minuten</em>
+              <strong>Lions Sportsbar</strong><br>
+              Herzog-Wilhelm-Straße · Braunlage<br>
+              <em>rund 900 m · gut 10 Minuten zu Fuß</em>
             </div>`,
-      btn:"Wir fahren →",
-      nav:{lat:51.80071, lon:10.44842, label:"Altenauer Brauerei"}
+      btn:"Auf geht's →",
+      nav:{lat:51.72570, lon:10.60996, label:"Lions Sportsbar Braunlage"}
     }
   ]
 },
 {
-  id:"brauerei", name:"Altenauer Brauerei", sub:"Breite Straße 29 · Altenau",
-  lat:51.80071, lon:10.44842, gate:true, radius:400, profile:"car-fast",
+  // Die Bar ist erst seit Mai 2026 offen und steht noch nicht in OSM. Die
+  // Hausnummer widerspricht sich auf der eigenen Website (3 vs. 31) – beide
+  // Lagen liegen 223 m auseinander, der Radius deckt darum großzügig beide ab.
+  id:"lions", name:"Lions Sportsbar", sub:"Herzog-Wilhelm-Straße · Braunlage",
+  lat:51.72570, lon:10.60996, gate:true, radius:300, profile:"trekking",
   steps:[
     {
       type:"info",
-      title:"Eine Aufgabe für die nächsten zwei Stunden",
-      html:`<p><strong>Wer ist der Lieblings-Wrestler von Justus?</strong></p>
-            <p>Ihr habt die gesamte Brauereiführung Zeit, ihn zu erreichen. Danach geht's weiter.</p>`,
-      btn:"Führung ist rum →"
+      title:"Männlichkeits-Triathlon",
+      html:`<p>Darts, Fußball, Bier.</p>
+            <p>Und nebenbei eine Aufgabe:</p>
+            <p><strong>Wer ist der Lieblings-Wrestler von Justus?</strong></p>
+            <p>Ihr habt Zeit, ihn zu erreichen, bis die Bundesliga zu Ende ist. Danach geht's weiter.</p>`,
+      btn:"Bundesliga ist rum →"
     },
     {
       type:"text",
@@ -423,8 +428,8 @@ const STATIONS = [
     },
     {
       type:"info",
-      title:"Zurück nach Braunlage",
-      html:`<p>Parken, dann in den <strong>Kurpark</strong>. Dort steht ein Gedenkstein für einen früheren Kurdirektor.</p>`,
+      title:"Weiter",
+      html:`<p>Raus an die Luft. Ab in den <strong>Kurpark</strong>, südöstlich vom Ortskern. Dort steht ein Gedenkstein für einen früheren Kurdirektor.</p>`,
       btn:"Auf geht's →",
       nav:{lat:51.72573, lon:10.61761, label:"Kurpark Braunlage"}
     }
@@ -523,7 +528,7 @@ const EGGS = [
   {k:["michi","damenmode","michis damenmode"], t:"Falsch. Aber schön, dass ihr an Michi's Damenmode denkt. Mitten im Wald. Keine Öffnungszeiten. Läuft trotzdem."},
   {k:["jack","jackenbleeker","jackenbleeker teich"], t:"Falsch. Der Jackenbleeker Teich klingt so echt, dass ihn wahrscheinlich schon jemand in OpenStreetMap eingetragen hat."},
   {k:["gregor","schrosch","schorsch","brockenschorsch"], t:"Falsch. Schorschs Blick ist der schönste Aussichtspunkt, den es nie gegeben hat."},
-  {k:["thorben","tietjen","tietjenhai"], t:"Falsch. Aber schaut mal auf eine echte Harzkarte: da gibt es den Quitschenhai und den Brandhai. Der Tietjenhai fügt sich also bestens ein."},
+  {k:["thorben","tudelz","tudelzhai","tietjen"], t:"Falsch. Aber schaut mal auf eine echte Harzkarte: da gibt es den Quitschenhai und den Brandhai. Der Tudelzhai fügt sich also bestens ein."},
   {k:["brocken"], t:"Immer der Brocken. 1141 Meter, ständig Nebel, Touristenbahn. Der Wurmberg ist der bessere Berg und ihr wisst das."},
   {k:["bier","pils","pilsener","hopfen"], t:"Bier ist heute immer eine gute Antwort. Nur eben nicht diese."},
   {k:["pilz","pilze","steinpilz","champignon"], t:"Ihr seid so nah dran und gleichzeitig so weit weg."},
@@ -558,9 +563,9 @@ const isAdmin = () => /admin/.test(HASH());
 const startEl = document.getElementById("start");
 const startBtn = document.getElementById("start-btn");
 
-/* Losgehen darf es erst am Samstag, 19.09.2026, 00:00 Ortszeit.
-   Im Frei-Modus ist die Sperre aus. */
-const GO_LIVE = new Date(2026, 8, 19, 0, 0, 0);
+/* Losgehen darf es erst am Samstag, 19.09.2026, 09:00 Ortszeit.
+   Monat ist nullbasiert: 8 = September. Im Frei-Modus ist die Sperre aus. */
+const GO_LIVE = new Date(2026, 8, 19, 9, 0, 0);
 
 function tickCountdown(){
   const cd = document.getElementById("countdown");
